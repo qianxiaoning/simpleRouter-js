@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <a href="#/">首页</a>
+    <a href="#/a">页面a</a>
+    <div id="routerView"></div>
+    <script>
+    // 定义路由类
+    class Router{
+        constructor(){
+            // 路由表对象
+            this.routerObj = {};
+            // 当前url地址
+            this.currentUrl = '';
+            // 内部方法
+            // 路由刷新
+            const refresh = () => {
+                // 获取当前url的hash值
+                this.currentUrl = location.hash.slice(1) || '/';
+                console.log(this, this.currentUrl)
+                // 执行当前路由回调函数
+                this.routerObj[this.currentUrl] && this.routerObj[this.currentUrl]();
+            }
+            // 开启监听window load和url hashchange
+            window.addEventListener('load', refresh, false);
+            // hash变化，触发对应路由事件
+            window.addEventListener('hashchange', refresh, false);
+        }        
+        // 原型方法        
+        // 添加路由表
+        addRoute(path, callback){
+            //存储path对应的回调函数
+            this.routerObj[path] = callback || function(){};
+        }                
+    }
+
+    // 配置路由表，路由实例化
+    const router = new Router();
+    const div = document.querySelector('#routerView');
+    router.addRoute('/',()=>{
+        div.innerHTML = '<h2>这是首页</h2>';
+    });
+    router.addRoute('/a',()=>{
+        div.innerHTML = '<h2>这是页面a</h2>';
+    });    
+    </script>
+</body>
+</html>
